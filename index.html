@@ -421,7 +421,7 @@ footer p { font-size:.78rem;color:var(--muted); }
     const msg=document.getElementById('fmessage').value.trim();
     if(!name||!email){alert('Please enter your name and email.');return;}
     const body=`New Demo Request from Future Generations Website\n\nName: ${name}\nSchool: ${school}\nEmail: ${email}\nWhatsApp: ${whatsapp}\nSchool Size: ${size}\n\nMessage:\n${msg||'No message provided.'}`;
-    const link=`mailto:futuregeninqiries@gmail.com?subject=Demo Request – ${encodeURIComponent(school||name)}&body=${encodeURIComponent(body)}`;
+    const link=`mailto:futuregeninquiries@gmail.com?subject=Demo Request – ${encodeURIComponent(school||name)}&body=${encodeURIComponent(body)}`;
     document.getElementById('submitBtn').disabled=true;
     document.getElementById('submitBtn').textContent='Opening mail...';
     window.location.href=link;
