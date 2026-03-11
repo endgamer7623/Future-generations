@@ -791,7 +791,7 @@
         <span class="cd-icon">✉️</span>
         <div>
           <div class="cd-label">Email us</div>
-          <a href="/cdn-cgi/l/email-protection#b8decdcccdcadddfddd6d1d6c9cdd1cad1ddcbf8dfd5d9d1d496dbd7d5" class="cd-value"><span class="__cf_email__" data-cfemail="deb8abaaabacbbb9bbb0b7b0afabb7acb7bbad9eb9b3bfb7b2f0bdb1b3">[email&#160;protected]</span></a>
+          <a href="mailto:futuregeninquiries@gmail.com" class="cd-value">futuregeninquiries@gmail.com</a>
         </div>
       </div>
       <div class="contact-detail-item">
@@ -852,25 +852,41 @@
 
 <!-- ===== SIGNUP MODAL ===== -->
 <div class="auth-overlay" id="signupOverlay">
-  <div class="auth-box">
+  <div class="auth-box" style="max-width:460px;max-height:90vh;overflow-y:auto">
     <button class="auth-close" onclick="closeSignupModal()">×</button>
     <div class="auth-box-icon">✨</div>
     <h3>Create an account</h3>
-    <p class="auth-sub">Join Future Generations to track your inquiries and get personalised support.</p>
+    <p class="auth-sub">Join Future Generations to track your inquiries and get personalised software recommendations.</p>
     <div class="auth-row">
-      <div class="auth-fg"><label>First Name</label><input type="text" id="suFirst" placeholder="First name"/></div>
+      <div class="auth-fg"><label>First Name *</label><input type="text" id="suFirst" placeholder="First name"/></div>
       <div class="auth-fg"><label>Last Name</label><input type="text" id="suLast" placeholder="Last name"/></div>
     </div>
-    <div class="auth-fg"><label>Email</label><input type="email" id="suEmail" placeholder="your@email.com"/></div>
-    <div class="auth-fg"><label>Organisation / Company</label><input type="text" id="suOrg" placeholder="School, business, clinic..."/></div>
-    <div class="auth-fg">
-      <label>Country</label>
-      <select id="suCountry">
-        <option value="">Select your country</option>
-        <option>Uganda</option><option>Kenya</option><option>Tanzania</option><option>Rwanda</option>
-        <option>Nigeria</option><option>Ghana</option><option>South Africa</option><option>Ethiopia</option>
-        <option>Other (Africa)</option><option>Outside Africa</option>
-      </select>
+    <div class="auth-fg"><label>Email *</label><input type="email" id="suEmail" placeholder="your@email.com"/></div>
+    <div class="auth-fg"><label>Phone / WhatsApp</label><input type="text" id="suPhone" placeholder="+256 700 000 000"/></div>
+    <div class="auth-fg"><label>Organisation / Company</label><input type="text" id="suOrg" placeholder="School, business, clinic, NGO..."/></div>
+    <div class="auth-fg"><label>Your Job Title / Role</label><input type="text" id="suJobTitle" placeholder="Head Teacher, Director, IT Manager..."/></div>
+    <div class="auth-row">
+      <div class="auth-fg">
+        <label>Organisation Size</label>
+        <select id="suOrgSize">
+          <option value="">Select size</option>
+          <option>Just me</option>
+          <option>2–10 people</option>
+          <option>11–50 people</option>
+          <option>51–200 people</option>
+          <option>200+ people</option>
+        </select>
+      </div>
+      <div class="auth-fg">
+        <label>Country</label>
+        <select id="suCountry">
+          <option value="">Select country</option>
+          <option>Uganda</option><option>Kenya</option><option>Tanzania</option><option>Rwanda</option>
+          <option>Nigeria</option><option>Ghana</option><option>South Africa</option><option>Ethiopia</option>
+          <option>Zambia</option><option>Zimbabwe</option><option>Malawi</option><option>Mozambique</option>
+          <option>Other (Africa)</option><option>Outside Africa</option>
+        </select>
+      </div>
     </div>
     <div class="auth-fg">
       <label>What are you interested in?</label>
@@ -879,10 +895,22 @@
         <option>School Management System</option><option>Web Development</option>
         <option>Custom Software Development</option><option>Business Management System</option>
         <option>Health Management System</option><option>Inventory Management System</option>
-        <option>Mobile App Development</option><option>Not sure yet</option>
+        <option>Mobile App Development</option><option>Multiple products</option><option>Not sure yet</option>
       </select>
     </div>
-    <div class="auth-fg"><label>Password</label><input type="password" id="suPass" placeholder="Create a password"/></div>
+    <div class="auth-fg">
+      <label>How did you hear about us?</label>
+      <select id="suHowHeard">
+        <option value="">Select one</option>
+        <option>Google / Search engine</option>
+        <option>WhatsApp</option>
+        <option>Friend or colleague</option>
+        <option>Social media</option>
+        <option>Referral from a school/business</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="auth-fg"><label>Password *</label><input type="password" id="suPass" placeholder="At least 6 characters"/></div>
     <div class="auth-err" id="signupErr"></div>
     <button class="auth-btn-primary" onclick="doSignup()">Create Account →</button>
     <div class="auth-switch">Already have an account? <a href="#" onclick="closeSignupModal();openLoginModal();return false">Log in</a></div>
@@ -906,6 +934,10 @@
       <div class="user-info-card"><div class="uic-label">Country</div><div class="uic-val" id="udCountry">—</div></div>
       <div class="user-info-card"><div class="uic-label">Interested In</div><div class="uic-val" id="udInterest">—</div></div>
       <div class="user-info-card"><div class="uic-label">Member Since</div><div class="uic-val" id="udSince">—</div></div>
+      <div class="user-info-card"><div class="uic-label">Job Title</div><div class="uic-val" id="udJobTitle">—</div></div>
+      <div class="user-info-card"><div class="uic-label">Phone / WhatsApp</div><div class="uic-val" id="udPhone">—</div></div>
+      <div class="user-info-card"><div class="uic-label">Org Size</div><div class="uic-val" id="udOrgSize">—</div></div>
+      <div class="user-info-card"><div class="uic-label">How They Found Us</div><div class="uic-val" id="udHowHeard">—</div></div>
     </div>
     <div class="admin-section-title" style="margin-bottom:10px" id="udInquiriesLabel">Your Inquiries</div>
     <div class="user-inquiry-list" id="udInquiries"></div>
@@ -999,33 +1031,50 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 /* =====================================================================
-   ANALYTICS
+   SUPABASE CLIENT
 ===================================================================== */
-let analytics = JSON.parse(sessionStorage.getItem('fg_analytics') || 'null') || {
-  visits:[], productClicks:{}, messages:[], sessionStart: Date.now()
-};
-const thisVisit = {
-  id: Date.now(), time: new Date().toLocaleString(),
-  device: /Mobi|Android/i.test(navigator.userAgent) ? '📱 Mobile' : '🖥 Desktop',
-  location: 'Detecting...', duration: 0, pages: 1
-};
-fetch('https://ipapi.co/json/')
-  .then(r=>r.json()).then(d=>{ thisVisit.location=`${d.city||'?'}, ${d.country_name||'?'}`; saveAnalytics(); })
-  .catch(()=>{ thisVisit.location='Unknown'; saveAnalytics(); });
-analytics.visits.unshift(thisVisit);
-analytics.sessionStart = Date.now();
-saveAnalytics();
-function saveAnalytics(){
-  if(analytics.visits.length>0) analytics.visits[0].duration=Math.round((Date.now()-analytics.sessionStart)/1000);
-  sessionStorage.setItem('fg_analytics',JSON.stringify(analytics));
-}
-setInterval(saveAnalytics,10000);
-function trackProductClick(n){ analytics.productClicks[n]=(analytics.productClicks[n]||0)+1; saveAnalytics(); }
+const SUPABASE_URL = 'https://xbvjoxiddpjpqtojxvuy.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhidmpveGlkZHBqcHF0b2p4dnV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDgwNTQsImV4cCI6MjA4ODc4NDA1NH0.PekiDfnXplumrT_HATYfrjWXHo5A7nkrY5weGIHb0HQ';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const ADMIN_EMAIL = 'mulwanacalvin6@gmail.com';
+
+// Unique session ID for this browser visit
+const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
 
 /* =====================================================================
-   CURSOR (decorative only — clicks work normally via CSS pointer fix)
+   ANALYTICS — now backed by Supabase
+===================================================================== */
+let sessionRowId = null;
+let sessionStart = Date.now();
+let localProductClicks = {};
+
+async function initVisit() {
+  let location = 'Unknown';
+  try { const r = await fetch('https://ipapi.co/json/'); const d = await r.json(); location = `${d.city||'?'}, ${d.country_name||'?'}`; } catch(e){}
+  const device = /Mobi|Android/i.test(navigator.userAgent) ? '📱 Mobile' : '🖥 Desktop';
+  const {data} = await sb.from('visitor_analytics').insert({ session_id:SESSION_ID, location, device, duration_seconds:0, pages_viewed:1 }).select('id').single();
+  if(data) sessionRowId = data.id;
+}
+initVisit();
+
+async function updateVisitDuration() {
+  if(!sessionRowId) return;
+  const secs = Math.round((Date.now() - sessionStart) / 1000);
+  await sb.from('visitor_analytics').update({ duration_seconds: secs }).eq('id', sessionRowId);
+}
+setInterval(updateVisitDuration, 15000);
+window.addEventListener('beforeunload', updateVisitDuration);
+
+async function trackProductClick(name) {
+  localProductClicks[name] = (localProductClicks[name]||0)+1;
+  await sb.from('product_clicks').insert({ product_name: name, session_id: SESSION_ID });
+}
+
+/* =====================================================================
+   CURSOR
 ===================================================================== */
 const cursor=document.getElementById('cursor'), ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
@@ -1037,13 +1086,9 @@ document.querySelectorAll('a,button').forEach(el=>{
 });
 
 /* =====================================================================
-   NAV SCROLL
+   NAV SCROLL & REVEAL
 ===================================================================== */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40));
-
-/* =====================================================================
-   REVEAL
-===================================================================== */
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
 },{threshold:.07});
@@ -1058,14 +1103,13 @@ function switchTab(id,btn){
   document.getElementById('panel-'+id).classList.add('active');
   btn.classList.add('active');
   const name=btn.getAttribute('data-product')||id;
-  analytics.productClicks[name]=(analytics.productClicks[name]||0)+1;
-  saveAnalytics();
+  trackProductClick(name);
 }
 
 /* =====================================================================
    CONTACT FORM
 ===================================================================== */
-function sendForm(){
+async function sendForm(){
   const name=document.getElementById('fname').value.trim();
   const org=document.getElementById('forg').value.trim();
   const email=document.getElementById('femail').value.trim();
@@ -1073,12 +1117,10 @@ function sendForm(){
   const product=document.getElementById('fproduct').value;
   const msg=document.getElementById('fmessage').value.trim();
   if(!name||!email){ alert('Please enter your name and email.'); return; }
-  analytics.messages.unshift({ id:Date.now(), name, org, email, whatsapp, product, message:msg||'No message provided.', time:new Date().toLocaleString() });
-  analytics.visits[0]&&(analytics.visits[0].pages+=1);
-  saveAnalytics();
-  // Save to current user's inquiries if logged in
-  const cu=getCurrentUser();
-  if(cu){ cu.inquiries=cu.inquiries||[]; cu.inquiries.unshift({product,message:msg,time:new Date().toLocaleString()}); saveUser(cu); }
+
+  const cu = getCurrentUser();
+  await sb.from('inquiries').insert({ user_id: cu?.id||null, name, organisation:org, email, whatsapp, product, message:msg||'No message provided.', source:'contact_form' });
+
   const body=`New Inquiry — Future Generations Website\n\nName: ${name}\nOrganization: ${org}\nEmail: ${email}\nWhatsApp: ${whatsapp}\nInterested In: ${product}\n\nMessage:\n${msg||'No message provided.'}`;
   const link=`mailto:futuregeninquiries@gmail.com?subject=Inquiry – ${encodeURIComponent(product||name)}&body=${encodeURIComponent(body)}`;
   document.getElementById('submitBtn').disabled=true;
@@ -1087,26 +1129,57 @@ function sendForm(){
   setTimeout(()=>{
     document.getElementById('contactForm').style.display='none';
     document.getElementById('formSuccess').style.display='block';
-    addMsgBubble('received',`Hi ${name}! ✅ We received your inquiry about "${product||'your project'}". We'll respond within 24 hours at ${email}. You can also WhatsApp us at +256 756 727 911.`);
+    addMsgBubble('received',`Hi ${name}! ✅ We received your inquiry about "${product||'your project'}". We'll get back to you within 24 hours at ${email}. You can also WhatsApp us at +256 756 727 911.`);
   },800);
 }
 
 /* =====================================================================
-   IN-APP MESSAGING — AI POWERED via Claude API
+   IN-APP MESSAGING — AI via Claude API (claude-haiku, browser-safe)
 ===================================================================== */
 let msgOpen=false;
-let msgHistory=JSON.parse(sessionStorage.getItem('fg_msgs')||'[]');
-let aiConversation=[]; // multi-turn history for Claude
+let msgHistory=[];
+let aiConversation=[];
 
-if(msgHistory.length===0){
-  const cu=getCurrentUser();
-  const greeting=cu
-    ? `👋 Welcome back, ${cu.firstName}! How can I help you today? Ask me anything about our products or your inquiry.`
-    : '👋 Hi! Welcome to Future Generations. I\'m your AI assistant — ask me anything about our software, products, or how we can help your organisation. I\'m powered by Claude AI and here to help! 🤖';
-  msgHistory.push({ type:'received', text:greeting, time:new Date().toLocaleString() });
-  sessionStorage.setItem('fg_msgs',JSON.stringify(msgHistory));
-  document.getElementById('msgBadge').style.display='flex';
+const SYSTEM_PROMPT=`You are the friendly, knowledgeable AI assistant for Future Generations — a software company based in Africa that builds practical digital systems.
+
+PRODUCTS (7 total):
+1. School Management System — Flutter/Firebase, offline-first. Features: students, fees, attendance, exams, report cards, timetable, library, bus tracking, SchoolPay, SMS, AI assistant, health tracker
+2. Web Development — React/Next.js, mobile-first, SEO, e-commerce, dashboards
+3. Custom Software Development — bespoke systems, workflow automation, data management
+4. Business Management Systems — HR, payroll, CRM, invoicing, multi-branch, offline
+5. Health Management Systems — patient records, appointments, prescriptions, lab results, billing
+6. Inventory Management — barcode scanning, multi-warehouse, demand forecasting
+7. Mobile App Development — Flutter, Android & iOS, offline-first, African payment gateways
+
+KEY FACTS:
+- All mobile apps are offline-first, built for budget Android devices and African networks
+- Contact: futuregeninquiries@gmail.com | WhatsApp +256 756 727 911
+- Respond within 24 hours
+- Pricing: always custom — direct people to the contact form or WhatsApp
+
+TONE: Warm, concise, helpful. 2-4 sentences max. Use 1 emoji per reply.`;
+
+async function initChat() {
+  const cu = getCurrentUser();
+  if(msgHistory.length===0){
+    const greeting = cu
+      ? `👋 Welcome back, ${cu.first_name}! How can I help you today?`
+      : `👋 Hi! I'm the Future Generations AI assistant. Ask me anything about our software products — I'm here to help! 🤖`;
+    msgHistory.push({type:'received', text:greeting, time:new Date().toLocaleTimeString()});
+    renderMessages();
+    document.getElementById('msgBadge').style.display='flex';
+    // Load previous chat from Supabase if logged in
+    if(cu){
+      const {data} = await sb.from('chat_messages').select('role,content,created_at').eq('session_id', SESSION_ID).order('created_at',{ascending:true}).limit(50);
+      if(data&&data.length>0){
+        msgHistory=[];
+        data.forEach(m=>{ msgHistory.push({type:m.role==='user'?'sent':'received', text:m.content, time:new Date(m.created_at).toLocaleTimeString()}); aiConversation.push({role:m.role,content:m.content}); });
+        renderMessages();
+      }
+    }
+  }
 }
+initChat();
 
 function renderMessages(){
   const body=document.getElementById('msgBody');
@@ -1119,47 +1192,57 @@ function toggleMsg(){
   if(msgOpen){ document.getElementById('msgBadge').style.display='none'; renderMessages(); setTimeout(()=>document.getElementById('msgInput').focus(),100); }
 }
 function addMsgBubble(type,text){
-  msgHistory.push({type,text,time:new Date().toLocaleString()});
-  sessionStorage.setItem('fg_msgs',JSON.stringify(msgHistory));
+  msgHistory.push({type, text, time:new Date().toLocaleTimeString()});
   if(msgOpen) renderMessages();
   else if(type==='received'){ document.getElementById('msgBadge').style.display='flex'; document.getElementById('msgBadge').textContent='1'; }
 }
-function showTyping(){
-  const body=document.getElementById('msgBody');
-  const el=document.createElement('div'); el.className='typing-indicator'; el.id='typingIndicator';
-  el.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-  body.appendChild(el); body.scrollTop=body.scrollHeight;
-}
+function showTyping(){ const b=document.getElementById('msgBody'); if(!document.getElementById('typingIndicator')){ const el=document.createElement('div'); el.className='typing-indicator'; el.id='typingIndicator'; el.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>'; b.appendChild(el); b.scrollTop=b.scrollHeight; } }
 function hideTyping(){ const el=document.getElementById('typingIndicator'); if(el) el.remove(); }
+
+// Smart keyword fallback — used when API is unavailable
+function smartFallback(text){
+  const t=text.toLowerCase();
+  if(t.includes('school')||t.includes('student')||t.includes('teacher')||t.includes('fee')||t.includes('attendance'))
+    return 'Our School Management System covers everything — students, fees, attendance, exams, report cards, bus tracking, and more. It runs fully offline on Android! 🏫 Want details on a specific feature?';
+  if(t.includes('price')||t.includes('cost')||t.includes('how much')||t.includes('quote')||t.includes('afford'))
+    return 'Pricing is custom based on your requirements. WhatsApp us at +256 756 727 911 or fill the contact form for a free quote — we respond within 24 hours! 💬';
+  if(t.includes('whatsapp')||t.includes('contact')||t.includes('call')||t.includes('email')||t.includes('reach'))
+    return '📧 futuregeninquiries@gmail.com | 💬 WhatsApp +256 756 727 911. Or fill the contact form — we reply within 24 hours!';
+  if(t.includes('offline')||t.includes('internet')||t.includes('network')||t.includes('no data'))
+    return 'All our apps are built offline-first — they keep working without internet and sync everything automatically when connection returns. 📶 Perfect for African environments.';
+  if(t.includes('health')||t.includes('clinic')||t.includes('hospital')||t.includes('patient'))
+    return 'Our Health System handles patient records, appointments, prescriptions, lab results, and billing — fully offline for clinics with unreliable internet. 🏥';
+  if(t.includes('inventory')||t.includes('stock')||t.includes('warehouse')||t.includes('barcode'))
+    return 'Our Inventory System includes barcode scanning, multi-warehouse tracking, low stock alerts, and AI demand forecasting. 📦 Works offline too!';
+  if(t.includes('business')||t.includes('hr')||t.includes('payroll')||t.includes('employee'))
+    return 'Our Business System covers HR, payroll, CRM, invoicing, multi-branch management, and more — all on mobile, offline-capable. 🏢';
+  if(t.includes('web')||t.includes('website')||t.includes('react')||t.includes('next'))
+    return 'We build fast, mobile-first websites with React/Next.js — SEO-ready, e-commerce capable, and optimised for African networks. 🌐';
+  if(t.includes('flutter')||t.includes('android')||t.includes('ios')||t.includes('mobile app'))
+    return 'We build with Flutter for both Android and iOS — native performance, one codebase, fully offline. ⚡ Optimised for budget Android phones common across Africa.';
+  if(t.includes('hi')||t.includes('hello')||t.includes('hey')||t.includes('good'))
+    return 'Hello! 👋 Great to have you here. Ask me anything about our 7 software products — School Management, Web Dev, Business Systems, Health Systems, and more!';
+  return 'Thanks for your message! 🙏 For a quick response, WhatsApp us at +256 756 727 911 or fill the contact form. Our team replies within 24 hours.';
+}
 
 async function sendMsg(){
   const input=document.getElementById('msgInput');
   const text=input.value.trim();
   if(!text) return;
-  input.value=''; input.disabled=true;
-  document.querySelector('.msg-send').disabled=true;
+  input.value=''; input.disabled=true; document.querySelector('.msg-send').disabled=true;
   addMsgBubble('sent',text);
-  analytics.messages.unshift({ id:Date.now(), name:'Website Visitor', org:'', email:'(chat widget)', whatsapp:'', product:'', message:text, time:new Date().toLocaleString() });
-  saveAnalytics();
   aiConversation.push({role:'user',content:text});
+
+  // Save user message to Supabase
+  const cu=getCurrentUser();
+  sb.from('chat_messages').insert({ user_id:cu?.id||null, session_id:SESSION_ID, role:'user', content:text });
+  // Also save as inquiry
+  sb.from('inquiries').insert({ user_id:cu?.id||null, name:cu?`${cu.first_name} ${cu.last_name||''}`.trim():'Website Visitor', organisation:cu?.organisation||'', email:cu?.email||'(chat widget)', whatsapp:cu?.phone||'', product:'', message:text, source:'chat_widget' });
+
   if(msgOpen) showTyping();
 
-  const SYSTEM_PROMPT=`You are the friendly, knowledgeable AI assistant for Future Generations — a software company based in Africa that builds practical digital systems for the continent.
-
-ABOUT THE COMPANY:
-- 7 products: School Management System, Web Development, Custom Software Development, Business Management Systems, Health Management Systems, Inventory Management Systems, Mobile App Development
-- All mobile apps built with Flutter + Firebase — fully offline-first, designed for African networks and budget Android devices
-- School Management System includes: student database, admissions, exams, report cards, fees/finance, inventory, timetable, library, attendance, SchoolPay integration, SMS, in-app messaging, bus tracking, AI assistant
-- Africa-focused, offline-first, mobile-first
-- Contact: Email futuregeninquiries@gmail.com | WhatsApp +256 756 727 911
-- Quote requests: fill the contact form on the website or message on WhatsApp — team responds within 24 hours
-
-TONE: Friendly, concise, knowledgeable. Keep replies to 2-4 sentences. Use emojis sparingly.
-PRICING: Never give specific prices — always say pricing depends on requirements, and invite them to reach out via form or WhatsApp.
-UNKNOWN QUESTIONS: Honestly say you don't know and suggest contacting the team directly.`;
-
   try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -1167,202 +1250,218 @@ UNKNOWN QUESTIONS: Honestly say you don't know and suggest contacting the team d
         'anthropic-version':'2023-06-01',
         'anthropic-dangerous-direct-browser-iab-consent':'true'
       },
-      body:JSON.stringify({
-        model:'claude-haiku-4-5-20251001',
-        max_tokens:400,
-        system:SYSTEM_PROMPT,
-        messages:aiConversation
-      })
+      body:JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:400, system:SYSTEM_PROMPT, messages:aiConversation })
     });
-    if(!res.ok) throw new Error('API '+res.status);
+    if(!res.ok) throw new Error('status '+res.status);
     const data=await res.json();
-    const reply=data.content?.[0]?.text||null;
+    const reply=data.content?.[0]?.text;
     if(!reply) throw new Error('empty');
     aiConversation.push({role:'assistant',content:reply});
     hideTyping(); addMsgBubble('received',reply);
-  } catch(err){
-    // Intelligent fallback responses based on message content
+    sb.from('chat_messages').insert({ user_id:cu?.id||null, session_id:SESSION_ID, role:'assistant', content:reply });
+  } catch(e) {
     hideTyping();
-    const tl=text.toLowerCase();
-    let fallback;
-    if(tl.includes('school')||tl.includes('student')||tl.includes('fee')||tl.includes('teacher'))
-      fallback='Our School Management System covers everything — students, fees, attendance, exams, report cards, bus tracking, and more. It works fully offline with Flutter & Firebase! 🏫 Want to know more about a specific feature?';
-    else if(tl.includes('price')||tl.includes('cost')||tl.includes('how much')||tl.includes('quote'))
-      fallback='Pricing depends on your specific requirements and scale. Reach out via the contact form on this page or WhatsApp us at +256 756 727 911 for a custom quote — we respond within 24 hours! 💬';
-    else if(tl.includes('whatsapp')||tl.includes('contact')||tl.includes('call')||tl.includes('email'))
-      fallback='You can reach us at 📧 futuregeninquiries@gmail.com or 💬 WhatsApp +256 756 727 911. Or fill the contact form below — we reply within 24 hours!';
-    else if(tl.includes('offline')||tl.includes('internet')||tl.includes('connectivity')||tl.includes('network'))
-      fallback='All our mobile apps are built offline-first! 📶 Data is stored locally and syncs automatically when connectivity returns — no data lost, no duplicates. Perfect for African environments.';
-    else if(tl.includes('flutter')||tl.includes('firebase')||tl.includes('android')||tl.includes('ios'))
-      fallback='We build with Flutter & Firebase — one codebase for both Android and iOS, native performance, and fully offline capable. ⚡ All apps are optimised for budget Android devices common across Africa.';
-    else if(tl.includes('health')||tl.includes('clinic')||tl.includes('hospital')||tl.includes('patient'))
-      fallback='Our Health Management System handles patient records, appointments, prescriptions, lab results, billing, and pharmacy inventory — all offline-first. 🏥 Great for clinics and hospitals with unreliable internet.';
-    else if(tl.includes('inventory')||tl.includes('stock')||tl.includes('warehouse'))
-      fallback='Our Inventory System covers real-time stock tracking, barcode scanning, multi-warehouse management, low stock alerts, and AI demand forecasting. 📦 Works offline too!';
-    else if(tl.includes('web')||tl.includes('website')||tl.includes('app'))
-      fallback='We build fast, mobile-first websites and web apps with React/Next.js, as well as native mobile apps with Flutter. 🌐 Everything optimised for Africa\'s networks and devices.';
-    else
-      fallback='Thanks for your message! 🙏 Our team will get back to you soon. For faster response, WhatsApp us at +256 756 727 911 or fill the contact form on this page.';
+    const fallback=smartFallback(text);
     addMsgBubble('received',fallback);
+    sb.from('chat_messages').insert({ user_id:cu?.id||null, session_id:SESSION_ID, role:'assistant', content:fallback });
   }
+
   input.disabled=false; document.querySelector('.msg-send').disabled=false;
   if(msgOpen) setTimeout(()=>input.focus(),50);
 }
 
 /* =====================================================================
-   USER AUTH SYSTEM
-   Users stored in sessionStorage (keyed by email).
-   Admin = mulwanacalvin6@gmail.com gets special dashboard access.
+   USER AUTH — Supabase backed
 ===================================================================== */
-const ADMIN_EMAIL='mulwanacalvin6@gmail.com';
-
-function getAllUsers(){ return JSON.parse(sessionStorage.getItem('fg_users')||'{}'); }
-function saveAllUsers(u){ sessionStorage.setItem('fg_users',JSON.stringify(u)); }
 function getCurrentUser(){ return JSON.parse(sessionStorage.getItem('fg_current_user')||'null'); }
-function saveUser(u){ const all=getAllUsers(); all[u.email.toLowerCase()]=u; saveAllUsers(all); if(getCurrentUser()?.email===u.email) sessionStorage.setItem('fg_current_user',JSON.stringify(u)); }
+function setCurrentUser(u){ sessionStorage.setItem('fg_current_user', u?JSON.stringify(u):'null'); }
 
 function updateNavAuth(){
   const cu=getCurrentUser();
-  const authBtns=document.getElementById('navAuthButtons');
-  const userPill=document.getElementById('navUserPill');
+  document.getElementById('navAuthButtons').style.display=cu?'none':'flex';
+  const pill=document.getElementById('navUserPill');
+  pill.style.display=cu?'flex':'none';
   if(cu){
-    authBtns.style.display='none';
-    userPill.style.display='flex';
-    document.getElementById('navUserName').textContent=cu.firstName;
-    document.getElementById('navUserAvatar').textContent=(cu.firstName[0]||'U').toUpperCase();
-  } else {
-    authBtns.style.display='flex';
-    userPill.style.display='none';
+    document.getElementById('navUserName').textContent=cu.first_name;
+    document.getElementById('navUserAvatar').textContent=(cu.first_name[0]||'U').toUpperCase();
   }
 }
 
-// Login modal
+// Login
 function openLoginModal(){ document.getElementById('loginOverlay').classList.add('open'); setTimeout(()=>document.getElementById('loginEmail').focus(),100); }
 function closeLoginModal(){ document.getElementById('loginOverlay').classList.remove('open'); document.getElementById('loginErr').style.display='none'; }
 
-function doLogin(){
+async function doLogin(){
   const email=document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass=document.getElementById('loginPass').value;
-  const err=document.getElementById('loginErr');
-  if(!email||!pass){ err.textContent='Please enter your email and password.'; err.style.display='block'; return; }
-  const all=getAllUsers();
-  const user=all[email];
-  if(!user||user.password!==btoa(pass)){ err.style.display='block'; err.textContent='❌ Incorrect email or password.'; document.getElementById('loginPass').value=''; return; }
-  err.style.display='none';
-  sessionStorage.setItem('fg_current_user',JSON.stringify(user));
+  const errEl=document.getElementById('loginErr');
+  if(!email||!pass){ errEl.textContent='Please enter your email and password.'; errEl.style.display='block'; return; }
+
+  const btn=document.querySelector('#loginOverlay .auth-btn-primary');
+  btn.textContent='Logging in...'; btn.disabled=true;
+
+  // Hash password client-side (simple base64 for demo — matches signup)
+  const {data,error}=await sb.from('users').select('*').eq('email',email).eq('password_hash',btoa(pass)).maybeSingle();
+  btn.textContent='Log in →'; btn.disabled=false;
+
+  if(error||!data){ errEl.style.display='block'; errEl.textContent='❌ Incorrect email or password.'; document.getElementById('loginPass').value=''; return; }
+  errEl.style.display='none';
+  setCurrentUser(data);
   closeLoginModal();
   updateNavAuth();
-  // If admin — show admin dashboard option
-  if(email===ADMIN_EMAIL.toLowerCase()){
-    setTimeout(()=>openUserDash(),200);
-  } else {
-    setTimeout(()=>{ addMsgBubble('received',`Welcome back, ${user.firstName}! 👋 How can I help you today?`); if(!msgOpen) document.getElementById('msgBadge').style.display='flex'; },300);
-  }
+  prefillContactForm(data);
+  msgHistory=[]; aiConversation=[];
+  initChat();
+  if(data.email===ADMIN_EMAIL){ setTimeout(()=>openUserDash(),200); }
 }
 
-// Signup modal
+// Signup
 function openSignupModal(){ document.getElementById('signupOverlay').classList.add('open'); setTimeout(()=>document.getElementById('suFirst').focus(),100); }
 function closeSignupModal(){ document.getElementById('signupOverlay').classList.remove('open'); document.getElementById('signupErr').style.display='none'; }
 
-function doSignup(){
+async function doSignup(){
   const firstName=document.getElementById('suFirst').value.trim();
   const lastName=document.getElementById('suLast').value.trim();
   const email=document.getElementById('suEmail').value.trim().toLowerCase();
+  const phone=document.getElementById('suPhone').value.trim();
   const org=document.getElementById('suOrg').value.trim();
+  const jobTitle=document.getElementById('suJobTitle').value.trim();
+  const orgSize=document.getElementById('suOrgSize').value;
   const country=document.getElementById('suCountry').value;
   const interest=document.getElementById('suInterest').value;
+  const howHeard=document.getElementById('suHowHeard').value;
   const pass=document.getElementById('suPass').value;
-  const err=document.getElementById('signupErr');
-  if(!firstName||!email||!pass){ err.textContent='Please fill in first name, email, and password.'; err.style.display='block'; return; }
-  if(pass.length<6){ err.textContent='Password must be at least 6 characters.'; err.style.display='block'; return; }
-  const all=getAllUsers();
-  if(all[email]){ err.textContent='An account with this email already exists.'; err.style.display='block'; return; }
-  const newUser={ firstName, lastName, email, org, country, interest, password:btoa(pass), since:new Date().toLocaleDateString(), inquiries:[], isAdmin:email===ADMIN_EMAIL.toLowerCase() };
-  all[email]=newUser; saveAllUsers(all);
-  sessionStorage.setItem('fg_current_user',JSON.stringify(newUser));
+  const errEl=document.getElementById('signupErr');
+
+  if(!firstName||!email||!pass){ errEl.textContent='Please fill in First Name, Email, and Password.'; errEl.style.display='block'; return; }
+  if(pass.length<6){ errEl.textContent='Password must be at least 6 characters.'; errEl.style.display='block'; return; }
+
+  const btn=document.querySelector('#signupOverlay .auth-btn-primary');
+  btn.textContent='Creating account...'; btn.disabled=true;
+
+  // Check email not already taken
+  const {data:existing}=await sb.from('users').select('id').eq('email',email).maybeSingle();
+  if(existing){ errEl.textContent='An account with this email already exists. Try logging in.'; errEl.style.display='block'; btn.textContent='Create Account →'; btn.disabled=false; return; }
+
+  const newUser={
+    email, password_hash:btoa(pass),
+    first_name:firstName, last_name:lastName,
+    organisation:org, country, interest,
+    phone, job_title:jobTitle, organisation_size:orgSize,
+    how_heard:howHeard, role: email===ADMIN_EMAIL?'admin':'user'
+  };
+  const {data,error}=await sb.from('users').insert(newUser).select().single();
+  btn.textContent='Create Account →'; btn.disabled=false;
+
+  if(error||!data){ errEl.textContent='Something went wrong. Please try again.'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+  setCurrentUser(data);
   closeSignupModal();
   updateNavAuth();
-  // Add to analytics
-  analytics.messages.unshift({ id:Date.now(), name:`${firstName} ${lastName}`, org, email:'(new account)', whatsapp:'', product:interest, message:`New account created. Country: ${country||'?'}`, time:new Date().toLocaleString() });
-  saveAnalytics();
-  setTimeout(()=>{ addMsgBubble('received',`Welcome to Future Generations, ${firstName}! 🎉 I'm your AI assistant. Ask me anything about our ${interest||'products'} or how we can help you.`); if(!msgOpen) document.getElementById('msgBadge').style.display='flex'; },300);
+  prefillContactForm(data);
+  msgHistory=[]; aiConversation=[];
+  initChat();
 }
 
-// User dashboard modal
-function openUserDash(){
+// User dashboard
+async function openUserDash(){
   const cu=getCurrentUser();
   if(!cu) return;
-  document.getElementById('udAvatar').textContent=(cu.firstName[0]||'U').toUpperCase();
-  document.getElementById('udName').textContent=`${cu.firstName} ${cu.lastName}`.trim();
+  document.getElementById('udAvatar').textContent=(cu.first_name[0]||'U').toUpperCase();
+  document.getElementById('udName').textContent=`${cu.first_name} ${cu.last_name||''}`.trim();
   document.getElementById('udEmail').textContent=cu.email;
-  document.getElementById('udBadge').textContent=cu.isAdmin?'Admin':'Member';
-  document.getElementById('udOrg').textContent=cu.org||'—';
+  document.getElementById('udBadge').textContent=cu.role==='admin'?'Admin':'Member';
+  document.getElementById('udOrg').textContent=cu.organisation||'—';
   document.getElementById('udCountry').textContent=cu.country||'—';
   document.getElementById('udInterest').textContent=cu.interest||'—';
-  document.getElementById('udSince').textContent=cu.since||'—';
-  // Show admin row if admin
-  document.getElementById('udAdminRow').style.display=cu.isAdmin?'block':'none';
-  // Inquiries
-  const inqs=cu.inquiries||[];
+  document.getElementById('udSince').textContent=cu.created_at?new Date(cu.created_at).toLocaleDateString():'—';
+  document.getElementById('udJobTitle').textContent=cu.job_title||'—';
+  document.getElementById('udPhone').textContent=cu.phone||'—';
+  document.getElementById('udOrgSize').textContent=cu.organisation_size||'—';
+  document.getElementById('udHowHeard').textContent=cu.how_heard||'—';
+  document.getElementById('udAdminRow').style.display=cu.role==='admin'?'block':'none';
+
+  // Load user's inquiries from Supabase
+  const {data:inqs}=await sb.from('inquiries').select('product,message,created_at,source').eq('user_id',cu.id).order('created_at',{ascending:false}).limit(10);
   const inqEl=document.getElementById('udInquiries');
-  inqEl.innerHTML=inqs.length===0
-    ? '<div class="uil-empty">No inquiries yet. Fill the contact form to get started!</div>'
-    : inqs.map(i=>`<div class="user-inquiry-item"><div class="uii-title">${i.product||'General Inquiry'}</div><div style="font-size:.78rem;color:var(--muted);margin-top:2px">${(i.message||'').substring(0,80)}${i.message&&i.message.length>80?'...':''}</div><div class="uii-time">${i.time}</div></div>`).join('');
+  inqEl.innerHTML=(!inqs||inqs.length===0)
+    ?'<div class="uil-empty">No inquiries yet. Fill the contact form to get started!</div>'
+    :inqs.map(i=>`<div class="user-inquiry-item"><div class="uii-title">${i.product||'General Inquiry'} <span style="font-size:.65rem;color:var(--muted);font-weight:400">[${i.source==='chat_widget'?'Chat':'Form'}]</span></div><div style="font-size:.78rem;color:var(--muted);margin-top:2px">${(i.message||'').substring(0,90)}${i.message&&i.message.length>90?'...':''}</div><div class="uii-time">${new Date(i.created_at).toLocaleDateString()}</div></div>`).join('');
   document.getElementById('userDashOverlay').classList.add('open');
 }
 function closeUserDash(){ document.getElementById('userDashOverlay').classList.remove('open'); }
 
 function logoutUser(){
-  sessionStorage.removeItem('fg_current_user');
+  setCurrentUser(null);
   updateNavAuth();
   closeUserDash();
   msgHistory=[]; aiConversation=[];
   sessionStorage.removeItem('fg_msgs');
-  msgHistory.push({ type:'received', text:'👋 Hi! Welcome to Future Generations. Ask me anything about our software products, or sign in / create an account to track your inquiries.', time:new Date().toLocaleString() });
-  sessionStorage.setItem('fg_msgs',JSON.stringify(msgHistory));
+  initChat();
 }
 
-// Admin dashboard (opened from user dash admin button)
-function openAdminDash(){
-  saveAnalytics(); populateAdmin();
+// Admin dashboard — opened from user dash
+async function openAdminDash(){
+  await populateAdmin();
   document.getElementById('adminOverlay').classList.add('open');
   document.getElementById('adminThemeToggle').checked=document.body.classList.contains('light-mode');
 }
 function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); }
 
-function populateAdmin(){
-  const data=JSON.parse(sessionStorage.getItem('fg_analytics')||'{}');
-  const visits=data.visits||[], clicks=data.productClicks||{}, messages=data.messages||[];
-  document.getElementById('kpiVisits').textContent=visits.length;
-  document.getElementById('kpiMessages').textContent=messages.length;
-  const avgTime=visits.length?Math.round(visits.reduce((s,v)=>s+(v.duration||0),0)/visits.length):0;
+async function populateAdmin(){
+  // Visitor analytics
+  const {data:visits}=await sb.from('visitor_analytics').select('*').order('visited_at',{ascending:false}).limit(200);
+  const vArr=visits||[];
+  document.getElementById('kpiVisits').textContent=vArr.length;
+
+  // Messages / inquiries
+  const {data:msgs}=await sb.from('inquiries').select('*').order('created_at',{ascending:false}).limit(200);
+  const mArr=msgs||[];
+  document.getElementById('kpiMessages').textContent=mArr.length;
+
+  // Avg time
+  const avgTime=vArr.length?Math.round(vArr.reduce((s,v)=>s+(v.duration_seconds||0),0)/vArr.length):0;
   document.getElementById('kpiAvgTime').textContent=avgTime>=60?Math.floor(avgTime/60)+'m '+(avgTime%60)+'s':avgTime+'s';
-  const tp=Object.entries(clicks).sort((a,b)=>b[1]-a[1])[0];
+
+  // Top product
+  const {data:clicks}=await sb.from('product_clicks').select('product_name').limit(500);
+  const clickMap={};
+  (clicks||[]).forEach(c=>{ clickMap[c.product_name]=(clickMap[c.product_name]||0)+1; });
+  const tp=Object.entries(clickMap).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('kpiTopProduct').textContent=tp?tp[0].split(' ')[0]:'—';
+
+  // Visitor table
   const tbody=document.getElementById('visitorRows');
-  tbody.innerHTML=visits.length===0
+  tbody.innerHTML=vArr.length===0
     ?'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">No visitor data yet.</td></tr>'
-    :visits.map((v,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td>${v.time}</td><td>${v.location}</td><td>${v.device}</td><td>${v.duration>=60?Math.floor(v.duration/60)+'m '+v.duration%60+'s':v.duration+'s'}</td><td>${v.pages}</td></tr>`).join('');
-  const maxC=Math.max(1,...Object.values(clicks),1);
-  document.getElementById('productBars').innerHTML=Object.keys(clicks).length===0
+    :vArr.map((v,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td>${new Date(v.visited_at).toLocaleString()}</td><td>${v.location}</td><td>${v.device}</td><td>${v.duration_seconds>=60?Math.floor(v.duration_seconds/60)+'m '+v.duration_seconds%60+'s':v.duration_seconds+'s'}</td><td>${v.pages_viewed}</td></tr>`).join('');
+
+  // Product click bars
+  const maxC=Math.max(1,...Object.values(clickMap));
+  document.getElementById('productBars').innerHTML=Object.keys(clickMap).length===0
     ?'<p style="color:var(--muted);font-size:.78rem">No product clicks yet.</p>'
-    :Object.entries(clicks).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="bar-row"><span class="bar-label">${n}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxC*100)}%"></div></div><span class="bar-val">${c}</span></div>`).join('');
+    :Object.entries(clickMap).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="bar-row"><span class="bar-label">${n}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxC*100)}%"></div></div><span class="bar-val">${c}</span></div>`).join('');
+
+  // Session time distribution
   const tb={'<30s':0,'30s–2m':0,'2–5m':0,'5m+':0};
-  visits.forEach(v=>{ const d=v.duration||0; if(d<30)tb['<30s']++;else if(d<120)tb['30s–2m']++;else if(d<300)tb['2–5m']++;else tb['5m+']++; });
+  vArr.forEach(v=>{ const d=v.duration_seconds||0; if(d<30)tb['<30s']++;else if(d<120)tb['30s–2m']++;else if(d<300)tb['2–5m']++;else tb['5m+']++; });
   const mb=Math.max(1,...Object.values(tb));
   document.getElementById('timeBars').innerHTML=Object.entries(tb).map(([l,c])=>`<div class="bar-row"><span class="bar-label">${l}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/mb*100)}%"></div></div><span class="bar-val">${c}</span></div>`).join('');
-  // Registered users section
-  const allUsers=getAllUsers();
-  const userEntries=Object.values(allUsers).filter(u=>u.email!==ADMIN_EMAIL.toLowerCase());
+
+  // Registered users from Supabase
+  const {data:users}=await sb.from('users').select('*').neq('email',ADMIN_EMAIL).order('created_at',{ascending:false});
+  const uArr=users||[];
+
+  // Messages list + users list
   const msgEl=document.getElementById('adminMsgList');
-  const userSectionHtml=userEntries.length>0
-    ?`<div class="admin-section-title" style="margin-top:20px;margin-bottom:10px">Registered Users (${userEntries.length})</div>`
-    +userEntries.map(u=>`<div class="admin-msg-row"><div class="amr-top"><span class="amr-name">${u.firstName} ${u.lastName}</span><span class="amr-time">${u.since||''}</span></div><div class="amr-text">${u.org||'—'} · ${u.country||'—'} · Interested in: ${u.interest||'—'}</div><div class="amr-email">${u.email}</div></div>`).join('')
-    :'';
-  msgEl.innerHTML=(messages.length===0
+  const msgsHtml=mArr.length===0
     ?'<div class="admin-msgs-empty">No messages yet.</div>'
-    :messages.map(m=>`<div class="admin-msg-row"><div class="amr-top"><span class="amr-name">${m.name}${m.org?' · '+m.org:''}</span><span class="amr-time">${m.time}</span></div><div class="amr-text">${m.message}</div><div class="amr-email">${m.product?'🏷 '+m.product+' &nbsp;·&nbsp; ':''}${m.email}${m.whatsapp?' &nbsp;·&nbsp; '+m.whatsapp:''}</div></div>`).join(''))
-    +userSectionHtml;
+    :mArr.map(m=>`<div class="admin-msg-row"><div class="amr-top"><span class="amr-name">${m.name}${m.organisation?' · '+m.organisation:''}</span><span class="amr-time">${new Date(m.created_at).toLocaleString()}</span></div><div class="amr-text">${m.message}</div><div class="amr-email">${m.product?'🏷 '+m.product+' &nbsp;·&nbsp; ':''}${m.email}${m.whatsapp?' &nbsp;·&nbsp; '+m.whatsapp:''} <span style="font-size:.65rem;color:var(--muted)">[${m.source==='chat_widget'?'Chat':'Form'}]</span></div></div>`).join('');
+  const usersHtml=uArr.length>0
+    ?`<div class="admin-section-title" style="margin-top:24px;margin-bottom:10px">Registered Users (${uArr.length})</div>`
+    +uArr.map(u=>`<div class="admin-msg-row"><div class="amr-top"><span class="amr-name">${u.first_name} ${u.last_name||''}</span><span class="amr-time">${new Date(u.created_at).toLocaleDateString()}</span></div><div class="amr-text">${u.job_title||'—'} · ${u.organisation||'—'} · ${u.country||'—'} · ${u.organisation_size||'—'}</div><div class="amr-email">${u.email}${u.phone?' &nbsp;·&nbsp; '+u.phone:''} &nbsp;·&nbsp; Interested in: ${u.interest||'—'} &nbsp;·&nbsp; Found via: ${u.how_heard||'—'}</div></div>`).join('')
+    :'';
+  msgEl.innerHTML=msgsHtml+usersHtml;
 }
 
 /* =====================================================================
@@ -1389,7 +1488,7 @@ if(sessionStorage.getItem('fg_theme')==='light'){
 }
 
 /* =====================================================================
-   OVERLAY CLOSE ON BACKDROP CLICK
+   OVERLAY CLOSE ON BACKDROP
 ===================================================================== */
 ['adminOverlay','loginOverlay','signupOverlay','userDashOverlay'].forEach(id=>{
   document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
@@ -1398,16 +1497,17 @@ if(sessionStorage.getItem('fg_theme')==='light'){
 /* =====================================================================
    INIT
 ===================================================================== */
-updateNavAuth();
-
-// Pre-fill contact form name/email if logged in
-const _cu=getCurrentUser();
-if(_cu){
-  document.getElementById('fname').value=`${_cu.firstName} ${_cu.lastName}`.trim();
-  document.getElementById('femail').value=_cu.email;
-  if(_cu.org) document.getElementById('forg').value=_cu.org;
-  if(_cu.interest) document.getElementById('fproduct').value=_cu.interest;
+function prefillContactForm(u){
+  if(!u) return;
+  document.getElementById('fname').value=`${u.first_name} ${u.last_name||''}`.trim();
+  document.getElementById('femail').value=u.email||'';
+  if(u.organisation) document.getElementById('forg').value=u.organisation;
+  if(u.phone) document.getElementById('fwhatsapp').value=u.phone;
+  if(u.interest) document.getElementById('fproduct').value=u.interest;
 }
+updateNavAuth();
+const _cu=getCurrentUser();
+if(_cu) prefillContactForm(_cu);
 </script>
 </body>
 </html>
