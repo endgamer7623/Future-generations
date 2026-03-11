@@ -112,11 +112,103 @@
 
     /* ===== PRODUCTS ===== */
     .products-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;border-bottom:1px solid var(--border);padding-bottom:0}
-    .tab-btn{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:400;padding:10px 18px;cursor:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;letter-spacing:.02em}
+    .tab-btn{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:400;padding:10px 18px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;letter-spacing:.02em}
     .tab-btn:hover{color:var(--text)}
     .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
-    .product-panel{display:none}
-    .product-panel.active{display:block}
+
+    /* Panel container — fixed positioning context, height set by JS */
+    .panels-viewport{
+      position:relative;
+      overflow:hidden;
+      transition:height .42s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ALL panels always absolute — no layout reflow during animation */
+    .product-panel{
+      position:absolute;
+      top:0;left:0;right:0;
+      opacity:0;
+      pointer-events:none;
+      transform:translateX(80px);
+      transition:opacity .4s ease, transform .42s cubic-bezier(.4,0,.2,1);
+      will-change:transform,opacity;
+    }
+    /* Active panel is visible and in place — still absolute */
+    .product-panel.active{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateX(0);
+    }
+
+    /* ===== PRODUCT PANEL BACKGROUND IMAGE ===== */
+    .product-panel-inner{
+      position:relative;
+      border-radius:20px;
+      overflow:hidden;
+      /* subtle border to frame the panel */
+      border:1px solid var(--border);
+      margin-bottom:0;
+    }
+    /* The background image layer */
+    .panel-bg{
+      position:absolute;inset:0;z-index:0;
+      background-size:cover;
+      background-position:center right;
+      background-repeat:no-repeat;
+      opacity:0.45;
+      /* Blend dark-green site background color with the image */
+      mix-blend-mode:luminosity;
+      /* Bottom-left corner fade: radial gradient mask fading 28% of the corner */
+      -webkit-mask-image:
+        radial-gradient(ellipse 55% 50% at 0% 100%, transparent 30%, black 70%),
+        linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%),
+        linear-gradient(to top,   rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%);
+      -webkit-mask-composite: destination-in, destination-in;
+      mask-image:
+        radial-gradient(ellipse 55% 50% at 0% 100%, transparent 30%, black 70%),
+        linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%),
+        linear-gradient(to top,   rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%);
+      mask-composite: intersect;
+    }
+    /* Dark-green overlay on top of the image to blend with site palette */
+    .panel-bg::after{
+      content:'';
+      position:absolute;inset:0;
+      background:linear-gradient(
+        135deg,
+        rgba(9,13,18,0.62) 0%,
+        rgba(0,30,22,0.45) 40%,
+        rgba(0,200,150,0.05) 100%
+      );
+      pointer-events:none;
+    }
+    body.light-mode .panel-bg::after{
+      background:linear-gradient(
+        135deg,
+        rgba(240,244,248,0.55) 0%,
+        rgba(220,240,232,0.38) 40%,
+        rgba(0,200,150,0.04) 100%
+      );
+    }
+    body.light-mode .panel-bg{
+      opacity:0.38;
+      mix-blend-mode:multiply;
+    }
+    /* Panel content sits above the bg */
+    .panel-content{
+      position:relative;z-index:1;
+      padding:40px 44px 44px;
+    }
+    @media(max-width:700px){.panel-content{padding:28px 20px 32px}}
+
+    /* Per-panel background images */
+    #panel-school   .panel-bg{background-image:url('SMS1.png')}
+    #panel-web      .panel-bg{background-image:url('SMS2.png')}
+    #panel-software .panel-bg{background-image:url('SMS3.png')}
+    #panel-business .panel-bg{background-image:url('SMS4.png')}
+    #panel-health   .panel-bg{background-image:url('SMS5.png')}
+    #panel-inventory .panel-bg{background-image:url('SMS6.png')}
+    #panel-mobile   .panel-bg{background-image:url('SMS7.png')}
     .product-header{display:flex;align-items:flex-start;gap:48px;margin-bottom:52px;flex-wrap:wrap}
     .product-header-text{flex:1;min-width:280px}
     .product-icon-large{width:72px;height:72px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;border:1px solid rgba(0,200,150,.2);background:rgba(0,200,150,.07)}
@@ -520,8 +612,14 @@
     <button class="tab-btn" onclick="switchTab('mobile',this)" data-product="Mobile Apps">📱 Mobile Apps</button>
   </div>
 
+  <!-- PANELS VIEWPORT — clips horizontal slide animation -->
+  <div class="panels-viewport">
+
   <!-- PANEL 1: SCHOOL MANAGEMENT -->
   <div class="product-panel active reveal" id="panel-school">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">🏫</div>
       <div class="product-header-text">
@@ -567,10 +665,15 @@
         <div class="signal-bar"><div class="sig on"></div><span>Synced — zero data lost</span></div>
       </div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 2: WEB DEVELOPMENT -->
   <div class="product-panel" id="panel-web">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">🌐</div>
       <div class="product-header-text">
@@ -593,10 +696,15 @@
       <div class="feat-card" onclick="trackProductClick('Web Development')"><div class="feat-icon">🔐</div><h4 class="feat-title">Authentication & Users</h4><p class="feat-desc">Secure login systems, user roles, and access control for web portals.</p></div>
       <div class="feat-card" onclick="trackProductClick('Web Development')"><div class="feat-icon">🔗</div><h4 class="feat-title">API Integrations</h4><p class="feat-desc">Connect to payment gateways, SMS providers, maps, and third-party services.</p></div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 3: CUSTOM SOFTWARE -->
   <div class="product-panel" id="panel-software">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">💻</div>
       <div class="product-header-text">
@@ -619,10 +727,15 @@
       <div class="feat-card" onclick="trackProductClick('Custom Software')"><div class="feat-icon">📈</div><h4 class="feat-title">Analytics & Reporting</h4><p class="feat-desc">Built-in dashboards with charts, exports, and real-time KPI tracking.</p></div>
       <div class="feat-card" onclick="trackProductClick('Custom Software')"><div class="feat-icon">🧰</div><h4 class="feat-title">Ongoing Maintenance</h4><p class="feat-desc">We don't disappear after launch. Monthly support, updates, and feature additions available.</p></div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 4: BUSINESS SYSTEMS -->
   <div class="product-panel" id="panel-business">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">🏢</div>
       <div class="product-header-text">
@@ -645,10 +758,15 @@
       <div class="feat-card" onclick="trackProductClick('Business Systems')"><div class="feat-icon">📋</div><h4 class="feat-title">Task & Project Management</h4><p class="feat-desc">Assign tasks, set deadlines, track progress, and manage team workloads.</p></div>
       <div class="feat-card nb" onclick="trackProductClick('Business Systems')"><div class="feat-icon">🤖</div><h4 class="feat-title">AI Business Insights</h4><p class="feat-desc">AI-powered summaries and recommendations based on your business data.</p></div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 5: HEALTH SYSTEMS -->
   <div class="product-panel" id="panel-health">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">🏥</div>
       <div class="product-header-text">
@@ -671,10 +789,15 @@
       <div class="feat-card" onclick="trackProductClick('Health Systems')"><div class="feat-icon">📊</div><h4 class="feat-title">Health Analytics</h4><p class="feat-desc">Disease patterns, patient volumes, and facility performance dashboards.</p></div>
       <div class="feat-card nb" onclick="trackProductClick('Health Systems')"><div class="feat-icon">🤖</div><h4 class="feat-title">AI Triage Assistant</h4><p class="feat-desc">AI-assisted symptom triage to help staff prioritize patients efficiently.</p></div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 6: INVENTORY SYSTEMS -->
   <div class="product-panel" id="panel-inventory">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">📦</div>
       <div class="product-header-text">
@@ -697,10 +820,15 @@
       <div class="feat-card" onclick="trackProductClick('Inventory Systems')"><div class="feat-icon">📋</div><h4 class="feat-title">Audit & Reconciliation</h4><p class="feat-desc">Periodic stock audits with variance reports to identify losses or discrepancies.</p></div>
       <div class="feat-card nb" onclick="trackProductClick('Inventory Systems')"><div class="feat-icon">📈</div><h4 class="feat-title">Demand Forecasting</h4><p class="feat-desc">AI-powered reorder predictions based on historical sales and seasonal patterns.</p></div>
     </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
   </div>
 
   <!-- PANEL 7: MOBILE APPS -->
   <div class="product-panel" id="panel-mobile">
+    <div class="product-panel-inner">
+      <div class="panel-bg"></div>
+      <div class="panel-content">
     <div class="product-header">
       <div class="product-icon-large">📱</div>
       <div class="product-header-text">
@@ -723,7 +851,11 @@
       <div class="feat-card" onclick="trackProductClick('Mobile Apps')"><div class="feat-icon">📷</div><h4 class="feat-title">Camera & Media</h4><p class="feat-desc">Photo capture, file upload, video playback, and document scanning built in.</p></div>
       <div class="feat-card nb" onclick="trackProductClick('Mobile Apps')"><div class="feat-icon">🤖</div><h4 class="feat-title">AI-Powered Features</h4><p class="feat-desc">Embed AI assistants, image recognition, or natural language processing into any app.</p></div>
     </div>
-  </div>
+      </div><!-- end panel-content -->
+    </div><!-- end panel-inner -->
+  </div><!-- end panel 7 -->
+
+  </div><!-- end panels-viewport -->
 </section>
 
 <!-- ABOUT -->
@@ -791,7 +923,7 @@
         <span class="cd-icon">✉️</span>
         <div>
           <div class="cd-label">Email us</div>
-          <a href="mailto:futuregeninquiries@gmail.com" class="cd-value">futuregeninquiries@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#375142434245525052595e5946425e455e524477505a565e5b1954585a" class="cd-value"><span class="__cf_email__" data-cfemail="a4c2d1d0d1d6c1c3c1cacdcad5d1cdd6cdc1d7e4c3c9c5cdc88ac7cbc9">[email&#160;protected]</span></a>
         </div>
       </div>
       <div class="contact-detail-item">
@@ -1031,7 +1163,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =====================================================================
    SUPABASE CLIENT
@@ -1095,16 +1227,98 @@ const obs=new IntersectionObserver(entries=>{
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 /* =====================================================================
-   TAB SWITCHING
+   TAB SWITCHING — all panels always position:absolute, no layout reflow
 ===================================================================== */
-function switchTab(id,btn){
-  document.querySelectorAll('.product-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  btn.classList.add('active');
-  const name=btn.getAttribute('data-product')||id;
-  trackProductClick(name);
+let currentPanelId = 'panel-school';
+let isAnimating = false;
+let cleanupTimer = null;
+
+function initPanelsViewport(){
+  const vp = document.querySelector('.panels-viewport');
+  if(!vp) return;
+  const active = document.getElementById(currentPanelId);
+  if(active) vp.style.height = active.scrollHeight + 'px';
 }
+
+function switchTab(id, btn){
+  const newId = 'panel-' + id;
+  if(newId === currentPanelId) return;
+
+  // If a previous animation is still running, finish it instantly
+  if(isAnimating && cleanupTimer){
+    clearTimeout(cleanupTimer);
+    // Snap old/new panels to their end state right away
+    document.querySelectorAll('.product-panel').forEach(p => {
+      p.style.cssText = '';
+    });
+    const prev = document.getElementById(currentPanelId);
+    if(prev) prev.classList.remove('active');
+  }
+  isAnimating = true;
+
+  const tabs    = Array.from(document.querySelectorAll('.tab-btn'));
+  const oldIdx  = tabs.findIndex(t => t.classList.contains('active'));
+  const newIdx  = tabs.indexOf(btn);
+  const dir     = newIdx > oldIdx ? 1 : -1;
+
+  const vp       = document.querySelector('.panels-viewport');
+  const oldPanel = document.getElementById(currentPanelId);
+  const newPanel = document.getElementById(newId);
+
+  // ── Step 1: freeze viewport height at current size ─────────────────
+  vp.style.transition = 'none';
+  vp.style.height = vp.offsetHeight + 'px';
+
+  // ── Step 2: park new panel off-screen with NO transition ───────────
+  newPanel.style.cssText =
+    `transform:translateX(${dir * 80}px);opacity:0;pointer-events:none;transition:none;`;
+
+  // Force reflow — commits both style changes above before we add transitions
+  vp.offsetHeight; // eslint-disable-line
+
+  // ── Step 3: animate viewport height to incoming panel ─────────────
+  vp.style.transition = 'height .42s cubic-bezier(.4,0,.2,1)';
+  vp.style.height = newPanel.scrollHeight + 'px';
+
+  // ── Step 4: slide OLD panel out ────────────────────────────────────
+  oldPanel.style.cssText =
+    `transform:translateX(${dir * -80}px);opacity:0;pointer-events:none;` +
+    `transition:opacity .34s ease,transform .38s cubic-bezier(.4,0,.2,1);`;
+  oldPanel.classList.remove('active');
+
+  // ── Step 5: slide NEW panel in (tiny stagger feels snappier) ───────
+  newPanel.style.cssText =
+    `transform:translateX(0);opacity:1;pointer-events:auto;` +
+    `transition:opacity .4s ease .05s,transform .42s cubic-bezier(.4,0,.2,1) .05s;`;
+  newPanel.classList.add('active');
+
+  // Update tab buttons
+  tabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentPanelId = newId;
+
+  // ── Step 6: clean up inline styles after animation completes ───────
+  cleanupTimer = setTimeout(() => {
+    oldPanel.style.cssText = '';
+    newPanel.style.cssText = '';
+    vp.style.transition = 'none';
+    vp.style.height = newPanel.scrollHeight + 'px';
+    isAnimating = false;
+    cleanupTimer = null;
+  }, 480);
+
+  trackProductClick(btn.getAttribute('data-product') || id);
+}
+
+// Set initial viewport height
+document.addEventListener('DOMContentLoaded', initPanelsViewport);
+if(document.readyState !== 'loading') setTimeout(initPanelsViewport, 0);
+// Recalculate on resize
+window.addEventListener('resize', () => {
+  const vp = document.querySelector('.panels-viewport');
+  const active = document.getElementById(currentPanelId);
+  if(vp && active && !isAnimating) vp.style.height = active.scrollHeight + 'px';
+});
 
 /* =====================================================================
    CONTACT FORM
