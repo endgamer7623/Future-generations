@@ -120,24 +120,21 @@
     .panels-viewport{
       position:relative;
       overflow:hidden;
-      transition:height .42s cubic-bezier(.4,0,.2,1);
     }
 
-    /* ALL panels always absolute — no layout reflow during animation */
+    /* ALL panels always position:absolute — hidden by default */
     .product-panel{
       position:absolute;
       top:0;left:0;right:0;
       opacity:0;
       pointer-events:none;
-      transform:translateX(80px);
-      transition:opacity .4s ease, transform .42s cubic-bezier(.4,0,.2,1);
-      will-change:transform,opacity;
+      /* NO transform here — default rest state is translateX(0) */
+      /* Transitions only applied by JS inline styles during animation */
     }
-    /* Active panel is visible and in place — still absolute */
+    /* Active = fully visible, no transform */
     .product-panel.active{
       opacity:1;
       pointer-events:auto;
-      transform:translateX(0);
     }
 
     /* ===== PRODUCT PANEL BACKGROUND IMAGE ===== */
@@ -215,12 +212,12 @@
     .product-name{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:10px;margin-top:8px}
     .product-desc{color:var(--muted);font-size:.95rem;line-height:1.7;max-width:520px;margin-bottom:20px}
     .product-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.15);padding:4px 12px;border-radius:100px;font-size:.72rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-right:8px;margin-bottom:8px}
-    .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:40px}
-    .feat-card{background:var(--bg2);padding:28px 24px;transition:background .3s;position:relative;overflow:hidden;cursor:pointer}
+    .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:40px}
+    .feat-card{background:transparent;padding:28px 24px;transition:background .25s;position:relative;overflow:hidden;cursor:pointer;backdrop-filter:blur(2px)}
     .feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
-    .feat-card:hover{background:var(--bg3)}
+    .feat-card:hover{background:rgba(0,200,150,0.07)}
     .feat-card:hover::before{opacity:1}
-    .feat-card.hl{background:linear-gradient(135deg,rgba(0,200,150,.07),rgba(0,122,255,.04))}
+    .feat-card.hl{background:rgba(0,200,150,0.06)}
     .feat-card.nb::after{content:'NEW';position:absolute;top:12px;right:12px;background:var(--accent);color:#000;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:100px;letter-spacing:.06em}
     .feat-icon{width:38px;height:38px;border-radius:9px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1rem}
     .feat-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
@@ -234,7 +231,7 @@
     .notify-form input:focus{border-color:rgba(0,200,150,.4)}
     .notify-btn{background:var(--accent);color:#000;border:none;padding:11px 22px;border-radius:8px;font-size:.875rem;font-weight:500;font-family:'DM Sans',sans-serif;cursor:none;transition:opacity .2s}
     .notify-btn:hover{opacity:.85}
-    .offline-strip{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:48px 52px;display:flex;align-items:center;gap:52px;position:relative;overflow:hidden;margin-top:0}
+    .offline-strip{background:rgba(0,0,0,0.18);border:1px solid var(--border);border-radius:16px;padding:48px 52px;display:flex;align-items:center;gap:52px;position:relative;overflow:hidden;margin-top:0;backdrop-filter:blur(4px)}
     .offline-strip::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(0,200,150,.06),transparent 70%);pointer-events:none}
     .offline-text{flex:1}
     .offline-text h3{font-family:'Syne',sans-serif;font-size:clamp(1.3rem,2.2vw,1.9rem);font-weight:800;letter-spacing:-.02em;margin-bottom:10px;line-height:1.2}
@@ -1227,15 +1224,26 @@ const obs=new IntersectionObserver(entries=>{
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 /* =====================================================================
-   TAB SWITCHING — all panels always position:absolute, no layout reflow
+   TAB SWITCHING
+   Key rule: CSS default for .product-panel is opacity:0, transform:none.
+   All transitions are applied only via inline style during animation.
+   Cleanup always explicitly resets to opacity:0, transform:translateX(0).
 ===================================================================== */
 let currentPanelId = 'panel-school';
-let isAnimating = false;
 let cleanupTimer = null;
+
+// Silently reset a panel to its resting hidden state (no transition)
+function resetPanel(panel){
+  panel.style.cssText = 'opacity:0;transform:translateX(0);pointer-events:none;';
+}
 
 function initPanelsViewport(){
   const vp = document.querySelector('.panels-viewport');
   if(!vp) return;
+  // Reset all non-active panels cleanly
+  document.querySelectorAll('.product-panel').forEach(p => {
+    if(!p.classList.contains('active')) resetPanel(p);
+  });
   const active = document.getElementById(currentPanelId);
   if(active) vp.style.height = active.scrollHeight + 'px';
 }
@@ -1244,80 +1252,70 @@ function switchTab(id, btn){
   const newId = 'panel-' + id;
   if(newId === currentPanelId) return;
 
-  // If a previous animation is still running, finish it instantly
-  if(isAnimating && cleanupTimer){
+  // Cancel any in-progress animation instantly — snap everything to rest
+  if(cleanupTimer){
     clearTimeout(cleanupTimer);
-    // Snap old/new panels to their end state right away
+    cleanupTimer = null;
     document.querySelectorAll('.product-panel').forEach(p => {
-      p.style.cssText = '';
+      if(p.id !== currentPanelId) resetPanel(p);
     });
-    const prev = document.getElementById(currentPanelId);
-    if(prev) prev.classList.remove('active');
   }
-  isAnimating = true;
 
-  const tabs    = Array.from(document.querySelectorAll('.tab-btn'));
-  const oldIdx  = tabs.findIndex(t => t.classList.contains('active'));
-  const newIdx  = tabs.indexOf(btn);
-  const dir     = newIdx > oldIdx ? 1 : -1;
+  const tabs     = Array.from(document.querySelectorAll('.tab-btn'));
+  const oldIdx   = tabs.findIndex(t => t.classList.contains('active'));
+  const newIdx   = tabs.indexOf(btn);
+  const dir      = newIdx > oldIdx ? 1 : -1;   // +1 = forward, -1 = backward
 
   const vp       = document.querySelector('.panels-viewport');
   const oldPanel = document.getElementById(currentPanelId);
   const newPanel = document.getElementById(newId);
 
-  // ── Step 1: freeze viewport height at current size ─────────────────
-  vp.style.transition = 'none';
-  vp.style.height = vp.offsetHeight + 'px';
-
-  // ── Step 2: park new panel off-screen with NO transition ───────────
+  // ── 1. Park new panel off-screen instantly (no transition) ──────────
   newPanel.style.cssText =
-    `transform:translateX(${dir * 80}px);opacity:0;pointer-events:none;transition:none;`;
+    `opacity:0;transform:translateX(${dir * 80}px);pointer-events:none;transition:none;`;
 
-  // Force reflow — commits both style changes above before we add transitions
-  vp.offsetHeight; // eslint-disable-line
+  // ── 2. Force a reflow so step 1 is committed to the GPU ─────────────
+  newPanel.getBoundingClientRect();
 
-  // ── Step 3: animate viewport height to incoming panel ─────────────
-  vp.style.transition = 'height .42s cubic-bezier(.4,0,.2,1)';
+  // ── 3. Set viewport height to incoming panel height ─────────────────
   vp.style.height = newPanel.scrollHeight + 'px';
 
-  // ── Step 4: slide OLD panel out ────────────────────────────────────
+  // ── 4. Slide OLD panel out (add transition, then change its state) ───
   oldPanel.style.cssText =
-    `transform:translateX(${dir * -80}px);opacity:0;pointer-events:none;` +
+    `opacity:0;transform:translateX(${dir * -80}px);pointer-events:none;` +
     `transition:opacity .34s ease,transform .38s cubic-bezier(.4,0,.2,1);`;
   oldPanel.classList.remove('active');
 
-  // ── Step 5: slide NEW panel in (tiny stagger feels snappier) ───────
+  // ── 5. Slide NEW panel in ────────────────────────────────────────────
   newPanel.style.cssText =
-    `transform:translateX(0);opacity:1;pointer-events:auto;` +
-    `transition:opacity .4s ease .05s,transform .42s cubic-bezier(.4,0,.2,1) .05s;`;
+    `opacity:1;transform:translateX(0);pointer-events:auto;` +
+    `transition:opacity .4s ease .04s,transform .42s cubic-bezier(.4,0,.2,1) .04s;`;
   newPanel.classList.add('active');
 
-  // Update tab buttons
+  // Update tab UI and state
   tabs.forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   currentPanelId = newId;
 
-  // ── Step 6: clean up inline styles after animation completes ───────
+  // ── 6. After animation: reset old panel to clean rest state ─────────
   cleanupTimer = setTimeout(() => {
-    oldPanel.style.cssText = '';
-    newPanel.style.cssText = '';
-    vp.style.transition = 'none';
+    resetPanel(oldPanel);          // opacity:0, translateX(0), no transition
+    newPanel.style.cssText = '';   // let CSS .active rule take over cleanly
     vp.style.height = newPanel.scrollHeight + 'px';
-    isAnimating = false;
     cleanupTimer = null;
   }, 480);
 
   trackProductClick(btn.getAttribute('data-product') || id);
 }
 
-// Set initial viewport height
 document.addEventListener('DOMContentLoaded', initPanelsViewport);
 if(document.readyState !== 'loading') setTimeout(initPanelsViewport, 0);
-// Recalculate on resize
 window.addEventListener('resize', () => {
-  const vp = document.querySelector('.panels-viewport');
-  const active = document.getElementById(currentPanelId);
-  if(vp && active && !isAnimating) vp.style.height = active.scrollHeight + 'px';
+  if(!cleanupTimer){
+    const vp = document.querySelector('.panels-viewport');
+    const active = document.getElementById(currentPanelId);
+    if(vp && active) vp.style.height = active.scrollHeight + 'px';
+  }
 });
 
 /* =====================================================================
