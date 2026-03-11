@@ -917,7 +917,7 @@
         <span class="cd-icon">✉️</span>
         <div>
           <div class="cd-label">Email us</div>
-          <a href="/cdn-cgi/l/email-protection#375142434245525052595e5946425e455e524477505a565e5b1954585a" class="cd-value"><span class="__cf_email__" data-cfemail="a4c2d1d0d1d6c1c3c1cacdcad5d1cdd6cdc1d7e4c3c9c5cdc88ac7cbc9">[email&#160;protected]</span></a>
+          <a href="mailto:futuregeninquiries@gmail.com" class="cd-value">futuregeninquiries@gmail.com</a>
         </div>
       </div>
       <div class="contact-detail-item">
@@ -1153,11 +1153,40 @@
         </div>
       </div>
 
+      <!-- LIVE CHAT PANEL -->
+      <div>
+        <div class="admin-section-title" style="display:flex;align-items:center;gap:12px">
+          Live Chat
+          <span id="adminChatOnlineDot" style="width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent);display:inline-block;animation:blink 1.5s ease-in-out infinite"></span>
+          <span style="font-size:.72rem;color:var(--muted);font-weight:400">Admin is online — visitors see a live chat badge</span>
+          <button onclick="refreshAdminChatSessions()" style="margin-left:auto;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.2);color:var(--accent);border-radius:8px;padding:4px 14px;font-size:.78rem;cursor:pointer">↻ Refresh</button>
+        </div>
+        <div style="display:flex;gap:16px;min-height:400px">
+          <!-- Session list -->
+          <div id="adminChatSessions" style="width:220px;flex-shrink:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow-y:auto;display:flex;flex-direction:column;gap:0">
+            <div style="padding:14px 16px;font-size:.75rem;color:var(--muted);border-bottom:1px solid var(--border)">Active conversations</div>
+            <div id="adminSessionList" style="overflow-y:auto;flex:1">
+              <div style="padding:20px;text-align:center;color:var(--muted);font-size:.78rem">No active sessions</div>
+            </div>
+          </div>
+          <!-- Thread view -->
+          <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column">
+            <div id="adminChatThreadHeader" style="padding:14px 18px;border-bottom:1px solid var(--border);font-size:.82rem;color:var(--muted)">Select a conversation →</div>
+            <div id="adminChatThread" style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;min-height:280px">
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:10px">
+              <input id="adminChatInput" placeholder="Type your reply…" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none" onkeydown="if(event.key==='Enter')sendAdminReply()" disabled/>
+              <button onclick="sendAdminReply()" id="adminSendBtn" style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px 20px;font-weight:600;font-size:.85rem;cursor:pointer" disabled>Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =====================================================================
    SUPABASE CLIENT
@@ -1717,6 +1746,185 @@ function prefillContactForm(u){
 updateNavAuth();
 const _cu=getCurrentUser();
 if(_cu) prefillContactForm(_cu);
+
+/* =====================================================================
+   ADMIN LIVE CHAT — session list + thread view + send reply
+===================================================================== */
+let adminActiveSessId = null;
+let adminChatPollTimer = null;
+let adminLastMsgTime = null;
+
+async function refreshAdminChatSessions(){
+  // Get all sessions that have user messages in the last 2 hours
+  const since = new Date(Date.now() - 2*60*60*1000).toISOString();
+  const {data} = await sb.from('chat_messages')
+    .select('session_id, content, created_at, guest_name, is_admin_reply')
+    .eq('is_admin_reply', false)
+    .gte('created_at', since)
+    .order('created_at', {ascending: false});
+
+  const sessions = {};
+  (data||[]).forEach(m => {
+    if(!sessions[m.session_id]) sessions[m.session_id] = {
+      session_id: m.session_id,
+      last_msg: m.content,
+      last_time: m.created_at,
+      guest_name: m.guest_name || 'Visitor'
+    };
+  });
+
+  const list = Object.values(sessions);
+  const el = document.getElementById('adminSessionList');
+  if(list.length === 0){
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:.78rem">No active sessions</div>';
+    return;
+  }
+  el.innerHTML = list.map(s => `
+    <div class="admin-sess-item ${s.session_id===adminActiveSessId?'active':''}"
+         onclick="openAdminThread('${s.session_id}','${s.guest_name.replace(/'/g,'')}')"
+         style="padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .2s;${s.session_id===adminActiveSessId?'background:rgba(0,200,150,.1)':''}">
+      <div style="font-size:.8rem;font-weight:600;margin-bottom:3px">${s.guest_name}</div>
+      <div style="font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px">${s.last_msg}</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:3px">${new Date(s.last_time).toLocaleTimeString()}</div>
+    </div>`).join('');
+}
+
+async function openAdminThread(sessId, guestName){
+  adminActiveSessId = sessId;
+  document.getElementById('adminChatThreadHeader').textContent = `Chat with: ${guestName} (${sessId.substring(0,8)}…)`;
+  document.getElementById('adminChatInput').disabled = false;
+  document.getElementById('adminSendBtn').disabled = false;
+  document.getElementById('adminChatInput').focus();
+
+  // Refresh session list to highlight selected
+  refreshAdminChatSessions();
+
+  // Load thread
+  await loadAdminThread(sessId);
+
+  // Start polling for new visitor messages every 4s
+  if(adminChatPollTimer) clearInterval(adminChatPollTimer);
+  adminChatPollTimer = setInterval(() => loadAdminThread(sessId, true), 4000);
+}
+
+async function loadAdminThread(sessId, silent=false){
+  const {data} = await sb.from('chat_messages')
+    .select('role, content, created_at, is_admin_reply, guest_name')
+    .eq('session_id', sessId)
+    .order('created_at', {ascending: true})
+    .limit(100);
+
+  const msgs = data || [];
+  const thread = document.getElementById('adminChatThread');
+
+  // Check if there are new messages (for silent poll)
+  const latestTime = msgs.length ? msgs[msgs.length-1].created_at : null;
+  if(silent && latestTime === adminLastMsgTime) return; // no new messages
+  adminLastMsgTime = latestTime;
+
+  const atBottom = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 60;
+
+  thread.innerHTML = msgs.length === 0
+    ? '<div style="text-align:center;color:var(--muted);font-size:.78rem;padding:40px">No messages yet in this session.</div>'
+    : msgs.map(m => {
+        const isAdminMsg = m.is_admin_reply;
+        const isAI = m.role === 'assistant' && !m.is_admin_reply;
+        const label = isAdminMsg ? '👤 You (Admin)' : (isAI ? '🤖 AI' : `👥 ${m.guest_name||'Visitor'}`);
+        const bg = isAdminMsg ? 'rgba(0,200,150,0.15)' : (isAI ? 'rgba(0,122,255,0.08)' : 'var(--bg3)');
+        const align = isAdminMsg ? 'flex-end' : 'flex-start';
+        return `<div style="display:flex;flex-direction:column;align-items:${align};gap:2px">
+          <span style="font-size:.65rem;color:var(--muted)">${label} · ${new Date(m.created_at).toLocaleTimeString()}</span>
+          <div style="background:${bg};border-radius:10px;padding:9px 13px;max-width:80%;font-size:.82rem;line-height:1.5;border:1px solid var(--border)">${m.content}</div>
+        </div>`;
+      }).join('');
+
+  if(atBottom || !silent) thread.scrollTop = thread.scrollHeight;
+}
+
+async function sendAdminReply(){
+  const input = document.getElementById('adminChatInput');
+  const text = input.value.trim();
+  if(!text || !adminActiveSessId) return;
+  input.value = '';
+
+  const cu = getCurrentUser();
+  await sb.from('chat_messages').insert({
+    user_id: cu?.id || null,
+    session_id: adminActiveSessId,
+    role: 'assistant',
+    content: text,
+    is_admin_reply: true,
+    guest_name: 'Admin'
+  });
+
+  await loadAdminThread(adminActiveSessId);
+}
+
+// Stop polling when admin dashboard closes
+document.getElementById('adminOverlay').addEventListener('click', function(e){
+  if(e.target === this){
+    this.classList.remove('open');
+    if(adminChatPollTimer){ clearInterval(adminChatPollTimer); adminChatPollTimer=null; }
+  }
+});
+document.querySelector('.admin-close').addEventListener('click', () => {
+  if(adminChatPollTimer){ clearInterval(adminChatPollTimer); adminChatPollTimer=null; }
+});
+
+// Load chat sessions when admin dash opens
+const _origOpenAdmin = openAdminDash;
+window.openAdminDash = async function(){
+  await _origOpenAdmin();
+  await refreshAdminChatSessions();
+  // Auto-refresh session list every 10s while admin panel is open
+  if(window._adminSessTimer) clearInterval(window._adminSessTimer);
+  window._adminSessTimer = setInterval(() => {
+    if(document.getElementById('adminOverlay').classList.contains('open'))
+      refreshAdminChatSessions();
+    else clearInterval(window._adminSessTimer);
+  }, 10000);
+};
+
+/* =====================================================================
+   VISITOR SIDE — poll for admin replies while chat is open
+   Admin replies have is_admin_reply=true, role='assistant'
+===================================================================== */
+let visitorAdminPollTimer = null;
+let visitorLastAdminMsgTime = null;
+
+function startVisitorAdminPoll(){
+  if(visitorAdminPollTimer) return; // already running
+  visitorLastAdminMsgTime = null;
+  visitorAdminPollTimer = setInterval(async () => {
+    const {data} = await sb.from('chat_messages')
+      .select('content, created_at')
+      .eq('session_id', SESSION_ID)
+      .eq('is_admin_reply', true)
+      .order('created_at', {ascending: false})
+      .limit(1);
+
+    if(!data || data.length === 0) return;
+    const latest = data[0];
+    if(latest.created_at === visitorLastAdminMsgTime) return;
+    visitorLastAdminMsgTime = latest.created_at;
+    // Show admin reply in visitor chat (with a 👤 prefix so user knows it's human)
+    addMsgBubble('received', '👤 Admin: ' + latest.content);
+  }, 5000);
+}
+
+function stopVisitorAdminPoll(){
+  if(visitorAdminPollTimer){ clearInterval(visitorAdminPollTimer); visitorAdminPollTimer=null; }
+}
+
+// Patch toggleMsg to start/stop polling
+const _origToggleMsg = toggleMsg;
+window.toggleMsg = function(){
+  _origToggleMsg();
+  if(msgOpen) startVisitorAdminPoll();
+  else stopVisitorAdminPoll();
+};
+
+
 </script>
 </body>
 </html>
