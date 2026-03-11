@@ -152,10 +152,10 @@
       background-size:cover;
       background-position:center right;
       background-repeat:no-repeat;
-      opacity:0.45;
-      /* Blend dark-green site background color with the image */
-      mix-blend-mode:luminosity;
-      /* Bottom-left corner fade: radial gradient mask fading 28% of the corner */
+      opacity:0.48;
+      /* normal blend — keeps full colour, no B&W desaturation */
+      mix-blend-mode:normal;
+      /* Bottom-left corner fade */
       -webkit-mask-image:
         radial-gradient(ellipse 55% 50% at 0% 100%, transparent 30%, black 70%),
         linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%),
@@ -167,29 +167,26 @@
         linear-gradient(to top,   rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%);
       mask-composite: intersect;
     }
-    /* Dark-green overlay on top of the image to blend with site palette */
+    /* Dark overlay tinted with site's dark-green palette — keeps images feeling native */
     .panel-bg::after{
       content:'';
       position:absolute;inset:0;
       background:linear-gradient(
         135deg,
-        rgba(9,13,18,0.62) 0%,
-        rgba(0,30,22,0.45) 40%,
-        rgba(0,200,150,0.05) 100%
+        rgba(9,13,18,0.55) 0%,
+        rgba(4,20,14,0.38) 50%,
+        rgba(0,200,150,0.04) 100%
       );
       pointer-events:none;
     }
+    body.light-mode .panel-bg{opacity:0.35}
     body.light-mode .panel-bg::after{
       background:linear-gradient(
         135deg,
-        rgba(240,244,248,0.55) 0%,
-        rgba(220,240,232,0.38) 40%,
-        rgba(0,200,150,0.04) 100%
+        rgba(240,244,248,0.52) 0%,
+        rgba(210,235,225,0.3) 50%,
+        rgba(0,200,150,0.03) 100%
       );
-    }
-    body.light-mode .panel-bg{
-      opacity:0.38;
-      mix-blend-mode:multiply;
     }
     /* Panel content sits above the bg */
     .panel-content{
@@ -212,12 +209,12 @@
     .product-name{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:10px;margin-top:8px}
     .product-desc{color:var(--muted);font-size:.95rem;line-height:1.7;max-width:520px;margin-bottom:20px}
     .product-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.15);padding:4px 12px;border-radius:100px;font-size:.72rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-right:8px;margin-bottom:8px}
-    .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:40px}
-    .feat-card{background:transparent;padding:28px 24px;transition:background .25s;position:relative;overflow:hidden;cursor:pointer;backdrop-filter:blur(2px)}
+    .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,200,150,0.15);border:1px solid rgba(0,200,150,0.2);border-radius:16px;overflow:hidden;margin-bottom:40px}
+    .feat-card{background:rgba(0,200,150,0.10);padding:28px 24px;transition:background .25s;position:relative;overflow:hidden;cursor:pointer;backdrop-filter:blur(6px)}
     .feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
-    .feat-card:hover{background:rgba(0,200,150,0.07)}
+    .feat-card:hover{background:rgba(0,200,150,0.20)}
     .feat-card:hover::before{opacity:1}
-    .feat-card.hl{background:rgba(0,200,150,0.06)}
+    .feat-card.hl{background:rgba(0,200,150,0.16)}
     .feat-card.nb::after{content:'NEW';position:absolute;top:12px;right:12px;background:var(--accent);color:#000;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:100px;letter-spacing:.06em}
     .feat-icon{width:38px;height:38px;border-radius:9px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1rem}
     .feat-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
